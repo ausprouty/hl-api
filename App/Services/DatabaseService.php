@@ -17,7 +17,6 @@ class DatabaseService{
 
     private function connect() {
       try {
-        
           $dsn = "mysql:host={$this->host};port= {$this->port};dbname={$this->database};charset=utf8mb4";
           $this->dbConnection = new PDO($dsn, $this->username, $this->password);
           // Set PDO error mode to exception
@@ -37,8 +36,10 @@ class DatabaseService{
      */
     public function executeQuery(string $query, array $params = []) {
         try {
+     
             $statement = $this->dbConnection->prepare($query);
             $statement->execute($params);
+            echo sprintf($statement->rowCount() . " rows were affected");
             return $statement;
         } catch (PDOException $e) {
             throw new Exception("Error executing the query: " . $e->getMessage());

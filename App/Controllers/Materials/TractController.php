@@ -1,6 +1,8 @@
 <?php
 Namespace App\Controllers\Materials;
+
 use App\Services\DatabaseService;
+use PDO;
 
 
 class TractController {
@@ -10,43 +12,48 @@ class TractController {
         $this->databaseService = new DatabaseService();
     }
     public function getTractsToView() {
-        $query = "SELECT * FROM hl_materials
-            WHERE active LIKE :active 
-            AND category LIKE :category
-            AND format LIKE :format
-            AND lang2 LIKE :lang2
+        $query = "SELECT lang1 FROM hl_materials
+            WHERE active = :active 
+            AND category = :category
+            AND format = :format
+            AND lang2 = :lang2
             ORDER BY lang1 ASC";
          $params = [
             ':active' => 'YES', 
             ':category' => 'Tracts', 
             ':format' => 'VIEW', 
             ':lang2' => 'English']; 
-        return $this->databaseService->executeQuery($query);
+        $results = $this->databaseService->executeQuery($query, $params);
+        $data =  $results->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
     }
     public function getTractsMonolingual() {
-        $query = "SELECT distict(title, foreign_title_1) FROM hl_materials
+        $query = "SELECT distinct title, foreign_title_1 FROM hl_materials
             WHERE active LIKE :active 
             AND filename LIKE :filename
             ORDER BY title ASC";
          $params = [':active' => 'YES', 
             ':active' => 'YES', 
-            ':filename' => 'tracts-monolingual%', 
-            ':lang2' => 'English']; 
-        return $this->databaseService->executeQuery($query);
+            ':filename' => 'tracts-monolingual%'];
+        $results = $this->databaseService->executeQuery($query, $params);
+        $data =  $results->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
     }
-    public function getTractsBilingual() {
-        $query = "SELECT distict(title, foreign_title_1) FROM hl_materials
-            WHERE active LIKE :active 
-            AND filename LIKE :filename
+    public function getTractsBilingualEnglish() {
+        $query = "SELECT distinct title  FROM hl_materials
+            WHERE active = :active 
+            AND category = :category
+            AND lang2 = :lang2
             ORDER BY title ASC";
          $params = [':active' => 'YES', 
             ':active' => 'YES', 
-            ':filename' => 'tracts-bilingual%', 
+            ':category' => 'Tracts',
             ':lang2' => 'English']; 
-        return $this->databaseService->executeQuery($query);
+        $results = $this->databaseService->executeQuery($query, $params);
+        $data =  $results->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
     }
-    
-    
+
 
     // Add more query methods as needed
 }
