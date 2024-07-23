@@ -5,13 +5,20 @@ use PDO;
 use Exception;
 
 class DatabaseService{
+
+    private $host;
+    private $username;
+    private $password;
+    private $database;
+    private $port;
     private $dbConnection;
+
     public function __construct(){
-        $this->host = 'localhost';
-        $this->username = USERNAME;
-        $this->password = PASSWORD;
-        $this->database = DATABASE;
-        $this->port = DATABASE_PORT;
+        $this->host = getenv('DB_HOST') ?: 'localhost';
+        $this->username = getenv('DB_USERNAME');
+        $this->password = getenv('DB_PASSWORD');
+        $this->database = getenv('DB_DATABASE');
+        $this->port = getenv('DB_PORT') ?: 3306; // Default to 3306 if not set
         $this->connect();
       }
 

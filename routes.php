@@ -16,6 +16,7 @@ get('/hl-api/' . 'test/spirit/titles', 'App/Tests/canGetSpiritTitlesByLanguage.p
 get('/hl-api/' . 'test/tracts/view', 'App/Tests/canGetTractsToView.php');
 get('/hl-api/' . 'test/tracts/monolingual', 'App/Tests/canGetTractsMonolingual.php');
 get('/hl-api/' . 'test/tracts/bilingual/english', 'App/Tests/canGetTractsBilingualEnglish.php');
-get('/rcd/', 'App/Tests/canAccessFromWordPress.php');
-get('/rcd/spirit/titles', 'App/API/getSpiritTitles.php');
+get('/rcd/test', 'App/Tests/canAccessFromWordPress.php');
+get('/rcd/spirit/titles', 'App/API/Materials/getSpiritTitles.php');
+get('/rcd/tracts/view', 'App/API/Materials/getTractsToView.php');
 

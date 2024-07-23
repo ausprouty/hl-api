@@ -6,37 +6,30 @@ use PDO;
 use Exception;
 
 class SpiritController {
-    public static function getTitlesByLanguageName() {
-        $dbConnection = new DatabaseConnectionModel();
+
+    private $databaseService;
+
+    public function __construct() {
+        $this->databaseService = new DatabaseService();
+    }
+    public function getTitlesByLanguageName() {
+
         $query = "SELECT languageName
                   FROM hl_spirit 
                   ORDER BY languageName";
-        try {
-            $statement = $dbConnection->executeQuery($query);
-            $data = $statement->fetchAll(PDO::FETCH_ASSOC); // Fetch all results as array
-            return $data;
-        } catch (Exception $e) {
-            // Log the error or handle it appropriately
-            error_log("Error: " . $e->getMessage());
-            return null;
-        }
+        $results = $this->databaseService->executeQuery($query);
+        $data =  $results->fetchAll(PDO::FETCH_ASSOC);
+        return $data;
     }
-    public static function getByLanguageName($languageName) {
-        $dbConnection = new DatabaseConnectionModel();
+    public function getByLanguageName($languageName) {
         $query = "SELECT *
                   FROM hl_spirit 
                   WHERE languageName = :languageName";
         $params = array(
             ':languageName' => $languageName
         );
-        try {
-            $statement = $dbConnection->executeQuery($query, $params);
-            $data = $statement->fetchAll(PDO::FETCH_OBJ); // Fetch all results as array
-            return $data;
-        } catch (Exception $e) {
-            // Log the error or handle it appropriately
-            error_log("Error: " . $e->getMessage());
-            return null;
-        }
+        $results = $this->databaseService->executeQuery($query, $params);
+        $data =  $results->fetchAll(PDO::FETCH_OBJ);
+        return $data;
     }
 }
