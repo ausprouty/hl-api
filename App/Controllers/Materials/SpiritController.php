@@ -32,4 +32,8 @@ class SpiritController {
         $data =  $results->fetchAll(PDO::FETCH_OBJ);
         return $data;
     }
+    static function returnText($language) {
+        $text = get_file_contents( RESOURCE_DIR . 'spirit' . $language . 'default.html');
+        return $text;
+    }
 }

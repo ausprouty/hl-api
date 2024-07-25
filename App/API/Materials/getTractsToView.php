@@ -1,4 +1,5 @@
 <?php
+
 use App\Controllers\Materials\TractController;
 $tractController = new TractController();
 // Call the method to get the tracts

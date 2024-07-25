@@ -14,11 +14,11 @@ class DatabaseService{
     private $dbConnection;
 
     public function __construct(){
-        $this->host = getenv('DB_HOST') ?: 'localhost';
-        $this->username = getenv('DB_USERNAME');
-        $this->password = getenv('DB_PASSWORD');
-        $this->database = getenv('DB_DATABASE');
-        $this->port = getenv('DB_PORT') ?: 3306; // Default to 3306 if not set
+        $this->host = constant('DB_HOST') ?: 'localhost';
+        $this->username = constant('DB_USERNAME');
+        $this->password = constant('DB_PASSWORD');
+        $this->database = constant('DB_DATABASE');
+        $this->port = constant('DB_PORT') ?: 3306; // Default to 3306 if not set
         $this->connect();
       }
 
@@ -46,7 +46,6 @@ class DatabaseService{
      
             $statement = $this->dbConnection->prepare($query);
             $statement->execute($params);
-            echo sprintf($statement->rowCount() . " rows were affected");
             return $statement;
         } catch (PDOException $e) {
             throw new Exception("Error executing the query: " . $e->getMessage());
