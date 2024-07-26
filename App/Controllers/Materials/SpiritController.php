@@ -33,7 +33,16 @@ class SpiritController {
         return $data;
     }
     static function returnText($language) {
-        $text = get_file_contents( RESOURCE_DIR . 'spirit' . $language . 'default.html');
-        return $text;
+        $lc_language = strtolower($language);
+        $fileName = RESOURCE_DIR . 'spirit/' . $lc_language . '/default.htm';
+        // Check if the file exists
+        if (file_exists($fileName)) {
+            // Get the file contents
+            $text = file_get_contents($fileName);
+            return $text;
+        } else {
+            // Handle the error - file does not exist
+            return $fileName .'  is not available.';
+        }
     }
 }

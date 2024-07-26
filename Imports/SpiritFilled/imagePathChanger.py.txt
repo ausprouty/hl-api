@@ -1,0 +1,31 @@
+import os
+from bs4 import BeautifulSoup
+
+# Base URL for absolute paths
+BASE_URL = "https://hereslife.com/sites/all/files/spirit/"
+
+# Directory containing the HTML files
+root_directory = "c:/ampp/htdocs/hl-api/imports/SpiritFilled/old"
+
+for subdir, _, files in os.walk(root_directory):
+    for file in files:
+        if file.endswith(".html") or file.endswith(".htm"):
+            file_path = os.path.join(subdir, file)
+
+            # Read the HTML file
+            with open(file_path, 'r', encoding='utf-8') as f:
+                soup = BeautifulSoup(f, 'html.parser')
+
+            # Find all image tags
+            for img_tag in soup.find_all('img'):
+                src = img_tag.get('src')
+                if src:
+                    # Convert relative path to absolute URL
+                    absolute_url = os.path.normpath(os.path.join(BASE_URL, os.path.relpath(file_path, root_directory), src))
+                    img_tag['src'] = absolute_url
+
+            # Write the modified HTML back to the file
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(str(soup))
+
+print("Conversion complete.")
