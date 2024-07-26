@@ -24,7 +24,7 @@ get($path . 'test', 'App/API/Materials/getTractsToView.php');
 get($path . 'spirit/titles', 'App/API/Materials/getSpiritTitles.php');
 get($path . 'spirit/text/$language', 'App/API/Materials/getSpiritText.php');
 get($path . 'tracts/view', 'App/API/Materials/getTractsToView.php');
-get($path . 'materials/download', 'App/API/Materials/DownloadMaterialsUpdateUser.php');
+post($path . 'materials/download', 'App/API/Materials/DownloadMaterialsUpdateUser.php');
 
 if ($location == 'local'){
     get($path . 'test/spirit/titles', 'App/Tests/canGetSpiritTitlesByLanguage.php');
