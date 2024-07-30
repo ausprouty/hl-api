@@ -51,6 +51,25 @@ class DatabaseService{
             throw new Exception("Error executing the query: " . $e->getMessage());
         }
     }
+/**
+     * Executes a SQL query with optional parameters.
+     *
+     * @param string $query The SQL query to execute.
+     * @param array $params Optional parameters for prepared statement.
+     * @return rowCount The number of rows affected.
+     * @throws Exception If query execution fails.
+     */
+ 
+    public function executeUpdate(string $query, array $params = []) {
+        try {
+            $statement = $this->dbConnection->prepare($query);
+            $statement->execute($params);
+            return $statement->rowCount();
+        } catch (PDOException $e) {
+            throw new Exception("Error executing the update: " . $e->getMessage());
+        }
+    }
+    
 
     /**
      * Closes the database connection.
