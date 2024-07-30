@@ -1,24 +1,45 @@
 <?php
 header('Content-Type: application/json');
 
-// Retrieve and sanitize form data
-$name = isset($_POST['name']) ? filter_var($_POST['name'], FILTER_SANITIZE_STRING) : '';
-$email = isset($_POST['email']) ? filter_var($_POST['email'], FILTER_SANITIZE_EMAIL) : '';
-$country = isset($_POST['country']) ? filter_var($_POST['country'], FILTER_SANITIZE_STRING) : '';
-$state = isset($_POST['state']) ? filter_var($_POST['state'], FILTER_SANITIZE_STRING) : '';
-$checkbox1 = isset($_POST['checkbox1']) ? 1 : 0;
-$checkbox2 = isset($_POST['checkbox2']) ? 1 : 0;
-$checkbox3 = isset($_POST['checkbox3']) ? 1 : 0;
-$comments = isset($_POST['comments']) ? filter_var($_POST['comments'], FILTER_SANITIZE_STRING) : '';
-$file = isset($_POST['file']) ? filter_var($_POST['file'], FILTER_SANITIZE_STRING) : '';
+// Check if formData is set
+if (isset($_POST['formData'])) {
+    $formData = $_POST['formData'];
+    writeLogDebug("downloadMaterialsUpdateUser.php",$formData);
+    $data = array();
+    $sanitized_mail_lists = array();
+    // Loop through formData and sanitize the inputs
+    foreach ($formData as $field) {
+        $name = $field['name'];
+        $value = $field['value'];
+        // Check if the field name matches the pattern for our mail list checkboxes
+        if (preg_match('/^mail_lists\[[^\]]+\]$/', $name)) {
+            // Sanitize the value
+            $sanitized_value = filter_var($value, FILTER_SANITIZE_STRING);
+            // Add the sanitized value to the array
+            $sanitized_mail_lists[] = $sanitized_value;
+        } else {
+            switch ($name) {
+                case 'email':
+                    $data[$name] = filter_var($value, FILTER_SANITIZE_EMAIL);
+                    break;
+                default:
+                    $data[$name] = filter_var($value, FILTER_SANITIZE_STRING);
+                    break;
+            }
+        }
+    }
+    $data['selected_mail_lists'] = implode(',', $sanitized_mail_lists);
+    writeLogDebug("downloadMaterialsUpdateUser-34",$data);
+    // 
+    if ($data['apiKey'] != WORDPRESS_HL_API_KEY) {
+        echo json_encode(array('success' => false, 'message' => 'Invalid API key.'));
+        exit;
+    }
+    // Generate the file URL
+    $file_url = RESOURCE_DIR . $data['file'];
 
-// Log or process the form data as needed
-// ...
-$file = 'myfriends/LetsCelebrate.pdf';
-// Generate the file URL
-$file_url = RESOURCE_DIR  . $file;
-writeLogDebug('Resource', $file_url);
-
-
-// Respond with JSON
-echo json_encode(array('success' => true, 'file_url' => $file_url));
+    // Respond with JSON
+    echo json_encode(array('success' => true, 'file_url' => $file_url));
+} else {
+    echo json_encode(array('success' => false, 'message' => 'No form data received.'));
+}
