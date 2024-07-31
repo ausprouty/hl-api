@@ -38,10 +38,13 @@ class PostInputModel
 
         return $sanitized;
     }
-
+    
+    // return all data except apiKey
     public function getSanitizedFormData()
     {
-        return isset($this->data) ? $this->data : null;
+        $response = isset($this->data) ? $this->data : null;
+        $response['apiKey'] = null;
+        return $response;
     }
     public function getByKey($key)
     {
