@@ -39,7 +39,11 @@ class PostInputModel
         return $sanitized;
     }
 
-    public function get($key)
+    public function getSanitizedFormData()
+    {
+        return isset($this->data) ? $this->data : null;
+    }
+    public function getByKey($key)
     {
         return isset($this->data[$key]) ? $this->data[$key] : null;
     }

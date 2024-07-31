@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Data;
 
-use App\Models\Data\PostInput;
+use App\Models\Data\PostInputModel;
 use App\Services\AuthorizationService;
 
 class PostInputController
@@ -16,31 +16,46 @@ class PostInputController
 
     public function handlePost()
     {
+        //check for form data
         if (!isset($_POST['formData'])) {
-            echo json_encode(['success' => false, 'message' => 'No form data provided.']);
-            exit;
+            handleNoFormData(); 
         }
-
-        $postInput = new PostInput($_POST['formData']);
-        writeLogDebug("downloadMaterialsUpdateUser.php", $postInput->data);
-
-        if (!$this->authService->checkApiKey($postInput->get('apiKey'))) {
-            echo json_encode(['success' => false, 'message' => 'Invalid API key.']);
-            exit;
+        // Sanitize the form data
+        $postInput = new PostInputModel($_POST['formData']);
+        //check authorization
+        if (!$this->authService->checkApiKey($postInput->getByKey('apiKey'))) {
+            $handleInvalidApiKey();
         }
-
-        // Further processing...
-        $response = $this->processData($postInput->data);
-        echo json_encode($response);
+         // Create the response array
+        $sanitizedData = $postInput->getSanitizedFormData();
+        $response = [
+            'success' => true,
+            'message' => 'valid API key',
+            'data' => $sanitizedData
+        ];
+        // Return the response array
+        return $response;
     }
+    // Your controller method for handling invalid API key
+    public function handleInvalidApiKey() {
+        // Create the response array
+        $response = [
+            'success' => false,
+            'message' => 'Invalid API key.'
+        ];
 
-    private function processData($data)
-    {
-        // Process the sanitized data
-        writeLogDebug("downloadMaterialsUpdateUser-34", $data);
+        // Return the response array
+        return $response;
+    }
+    // Your controller method for handling a lack of form data
+    public function handleNoFormData() {
+        // Create the response array
+        $response = [
+            'success' => false,
+            'message' => 'No Form Data Provided.'
+        ];
 
-        // Your data processing logic...
-
-        return ['success' => true, 'message' => 'Data processed successfully.'];
+        // Return the response array
+        return $response;
     }
 }
