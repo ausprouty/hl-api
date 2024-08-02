@@ -2,7 +2,7 @@
 
 namespace App\Models\People;
 
-class hlEmailSeriesMemberModel {
+class EmailSeriesMemberModel {
     private $id;
     private $tid;
     private $cid;

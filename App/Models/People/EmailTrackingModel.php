@@ -2,7 +2,7 @@
 
 namespace App\Models\People;
 
-class hlEmailTrackingModel {
+class EmailTrackingModel {
     private $id;
     private $email_id;
     private $champion_id;
