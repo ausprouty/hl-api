@@ -6,7 +6,7 @@ use App\Services\DatabaseService;
 use PDO;
 use Exception;
 
-class HlChampionModel {
+class ChampionModel {
     private $databaseService;
 
     private $cid;

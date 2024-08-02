@@ -11,7 +11,18 @@ class MaterialController {
     public function __construct() {
         $this->model = new MaterialModel();
     }
-
+    public function getIdByFileName($fileName) {
+        try {
+            $material = $this->model->findByFileName($fileName);
+            if (!$material) {
+                throw new Exception("Material not found");
+            }
+            return $material['id'];
+        } catch (Exception $e) {
+            writeLogError('MaterialController::getIdByFileName', $e->getMessage());
+            return null;
+        }
+    }
     public function getMaterialById($id) {
         try {
             $material = $this->model->findById($id);

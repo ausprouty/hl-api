@@ -3,18 +3,18 @@ namespace App\Services;
 
 use App\Controllers\Data\PostInputController;
 use App\Controllers\Materials\MaterialController;
-use App\Controllers\People\HlChampionController;
+use App\Controllers\People\ChampionController;
 
 class UserMaterialService {
     
     protected $postInputController;
     protected $materialController;
-    protected $hlChampionController;
+    protected $championController;
 
     public function __construct() {
         $this->postInputController = new PostInputController();
         $this->materialController = new MaterialController();
-        $this->hlChampionController = new HlChampionController();
+        $this->championController = new ChampionController();
     }
 
     public function handleUserMaterialDownload() {
@@ -33,9 +33,9 @@ class UserMaterialService {
         $this->materialController->getAndIncrementDownloads($materialID); 
     
         // Create or update user contact details
-        $userId = $this->hlChampionController->updateChampionFromForm($data);
+        $userId = $this->championController->updateChampionFromForm($data);
         // update the user's last download date
-        $this->hlChampionController->updateLastDownloadDate($userId);
+        $this->championController->updateLastDownloadDate($userId);
        // Return the file URL
         $file_url = RESOURCE_DIR . $data['file'];
 

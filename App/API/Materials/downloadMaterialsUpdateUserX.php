@@ -1,7 +1,7 @@
 <?php
 use App\Controllers\Data\PostInputController;
 use App\Controllers\Materials\MaterialController;
-use App\Controllers\People\HlChampionController;
+use App\Controllers\People\ChampionController;
 
 header('Content-Type: application/json');
 
@@ -22,8 +22,8 @@ if (!$materialID) {
     die;
 }
 // create or update user
-$hlChampionController = new HlChampionController();
-$userId = $hlChampionController->updateChampionFromForm($data);
+$championController = new ChampionController();
+$userId = $championController->updateChampionFromForm($data);
 writeLog('downloadMaterialsUpdateUser-26', $userId);
 // return the file url
 $file_url = RESOURCE_DIR . $data['file'];

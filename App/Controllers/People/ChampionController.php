@@ -2,18 +2,18 @@
 
 namespace App\Controllers\People;
 
-use App\Models\People\HlChampionModel;
+use App\Models\People\ChampionModel;
 
-class HlChampionController {
+class ChampionController {
 
     public function updateChampionFromForm($formdata) {
-        $champion = new HlChampionModel();
+        $champion = new ChampionModel();
         $champion->updateChampionFromFormData($formdata);
         $cid = $champion->getCid();
         return $cid;
     }
     public function updateLastDownloadDate($userId) {
-        $champion = new HlChampionModel();
+        $champion = new ChampionModel();
         $champion->updateLastDownloadDate($userId);
     }
 }
