@@ -3,8 +3,12 @@
 namespace App\Models\People;
 
 use App\Services\DatabaseService;
+use PDO;
+use Exception;
 
 class HlChampionModel {
+    private $databaseService;
+
     private $cid;
     private $first_name;
     private $surname;
@@ -28,6 +32,8 @@ class HlChampionModel {
     private $last_email_date;
 
     public function __construct($cid = null, $first_name = null, $surname = null, $title = null, $organization = null, $address = null, $suburb = null, $state = null, $postcode = '', $country = null, $phone = null, $sms = null, $email = null, $gender = null, $double_opt_in_date = null, $first_email_date = null, $last_open_date = null, $consider_dropping_date = null, $first_download_date = null, $last_download_date = null, $last_email_date = null) {
+        $this->databaseService = new DatabaseService();
+    
         $this->cid = $cid;
         $this->first_name = $first_name;
         $this->surname = $surname;
@@ -82,18 +88,26 @@ class HlChampionModel {
                 $this->$property = $value;
             }
         }
+        writeLog('hl_champion controller-84', $this);
         // Save or update the model in the database
         $this->save(); // Implement the save method to persist changes
     }
     
     public function save() {
+        if (!$this->email) {
+            return;
+        }
         // Check if the record already exists
-        $query = "SELECT cid FROM hl_champions WHERE email = :email LIMIT 1";
+        $query = "SELECT cid FROM hl_champions WHERE email = :email ORDER BY cid LIMIT 1";
         $params = array(':email' => $this->email);
+        writeLog('hl_champion controller-101', $params);
         $results = $this->databaseService->executeQuery($query, $params);
         $existingRecord = $results->fetch(PDO::FETCH_ASSOC);
     
         if ($existingRecord) {
+            writeLog('hl_champion controller-108', 'existing record');
+            // update cid
+            $this->cid = $existingRecord['cid'];
             // Update existing record
             $query = "UPDATE hl_champions 
                       SET first_name = :first_name, 
@@ -140,6 +154,7 @@ class HlChampionModel {
             );
         } else {
             // Insert new record
+            writeLog('hl_champion controller-155', 'new record');
             $query = "INSERT INTO hl_champions 
                       (first_name, surname, title, organization, address, suburb, state, postcode, country, phone, sms, email, gender, double_opt_in_date, first_email_date, last_open_date, consider_dropping_date, first_download_date, last_download_date, last_email_date)
                       VALUES 
@@ -167,9 +182,11 @@ class HlChampionModel {
                 ':last_email_date' => $this->last_email_date,
             );
         }
-    
+
         // Execute the query
         $this->databaseService->executeQuery($query, $params);
+        // update cid
+        $this->cid = $this->getCidByEmail($this->email);
     }
     public function loadByCid($cid) {
         $query = "SELECT * FROM hl_champions WHERE cid = :cid LIMIT 1";
@@ -214,9 +231,17 @@ class HlChampionModel {
             ':email' => $email
         );
         $results = $this->databaseService->executeQuery($query, $params);
-        $data =  $results->fetch(PDO::FETCH_ASSOC);
+        $data =  $results->fetchColumn();
         writeLog('hl_champion controller', $data);
         return $data;
+    }
+    public function updateLastDownloadDate($userId) {
+        $this->loadByCid($userId);
+        $this->last_download_date = time();
+        if ($this->first_download_date == 0 || $this->first_download_date == null) {
+            $this->first_download_date = time();
+        }
+        $this->save();
     }
 
     // Getters
