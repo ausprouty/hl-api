@@ -1,30 +1,57 @@
 <?php
 namespace App\Controllers\Materials;
 
-use App\Services\DatabaseService;
-use PDO;
+use App\Models\Materials\MaterialModel;
 use Exception;
 
 class MaterialController {
 
-    private $databaseService;
+    private $model;
 
     public function __construct() {
-        $this->databaseService = new DatabaseService();
+        $this->model = new MaterialModel();
     }
-    public function getIdByFileName($filename) {
-        $query = "SELECT id
-                  FROM hl_materials 
-                  WHERE filename = :filename
-                  LIMIT 1"; 
-        $params = array(            
-            ':filename' => $filename
-        );
-        $results = $this->databaseService->executeQuery($query, $params);
-        $data =  $results->fetch(PDO::FETCH_ASSOC);
-        writeLog('material controller', $data);
-        return $data;
+
+    public function getMaterialById($id) {
+        try {
+            $material = $this->model->findById($id);
+            if (!$material) {
+                throw new Exception("Material not found");
+            }
+            return $material;
+        } catch (Exception $e) {
+            writeLogError('MaterialController::getMaterialById', $e->getMessage());
+            return null;
+        }
     }
-    
-   
+
+    public function incrementMaterialDownloads($id) {
+        try {
+            $result = $this->model->incrementDownloads($id);
+            if (!$result) {
+                throw new Exception("Failed to increment downloads");
+            }
+            return true;
+        } catch (Exception $e) {
+            writeLogError('MaterialController::incrementMaterialDownloads', $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getAndIncrementDownloads($id) {
+        try {
+            // Retrieve the material by ID
+            $material = $this->getMaterialById($id);
+            if ($material) {
+                // Increment the downloads count
+                $this->incrementMaterialDownloads($id);
+                return $material;
+            } else {
+                throw new Exception("Material not found");
+            }
+        } catch (Exception $e) {
+            writeLogError('MaterialController::getAndIncrementDownloads', $e->getMessage());
+            return null;
+        }
+    }
 }

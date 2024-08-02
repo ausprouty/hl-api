@@ -1,8 +1,8 @@
 <?php
-
 namespace App\Models\Materials;
 
-class hlMaterialModel {
+class MaterialEntity {
+
     private $id;
     private $title;
     private $tips;
@@ -22,28 +22,28 @@ class hlMaterialModel {
     private $print_size;
     private $ordered;
 
-    public function __construct($id, $title = '', $tips = null, $foreign_title_1 = null, $foreign_title_2 = null, $lang1, $lang2, $format, $audience, $contact, $filename = '', $category = null, $downloads = null, $active = '', $active_date = null, $size = null, $print_size = null, $ordered = null) {
-        $this->id = $id;
-        $this->title = $title;
-        $this->tips = $tips;
-        $this->foreign_title_1 = $foreign_title_1;
-        $this->foreign_title_2 = $foreign_title_2;
-        $this->lang1 = $lang1;
-        $this->lang2 = $lang2;
-        $this->format = $format;
-        $this->audience = $audience;
-        $this->contact = $contact;
-        $this->filename = $filename;
-        $this->category = $category;
-        $this->downloads = $downloads;
-        $this->active = $active;
-        $this->active_date = $active_date;
-        $this->size = $size;
-        $this->print_size = $print_size;
-        $this->ordered = $ordered;
+    public function __construct($data) {
+        $this->id = $data['id'] ?? null;
+        $this->title = $data['title'] ?? '';
+        $this->tips = $data['tips'] ?? null;
+        $this->foreign_title_1 = $data['foreign_title_1'] ?? null;
+        $this->foreign_title_2 = $data['foreign_title_2'] ?? null;
+        $this->lang1 = $data['lang1'] ?? '';
+        $this->lang2 = $data['lang2'] ?? '';
+        $this->format = $data['format'] ?? '';
+        $this->audience = $data['audience'] ?? '';
+        $this->contact = $data['contact'] ?? '';
+        $this->filename = $data['filename'] ?? '';
+        $this->category = $data['category'] ?? null;
+        $this->downloads = $data['downloads'] ?? null;
+        $this->active = $data['active'] ?? '';
+        $this->active_date = $data['active_date'] ?? null;
+        $this->size = $data['size'] ?? null;
+        $this->print_size = $data['print_size'] ?? null;
+        $this->ordered = $data['ordered'] ?? null;
     }
 
-    // Getters
+    // Getters for each property...
     public function getId() { return $this->id; }
     public function getTitle() { return $this->title; }
     public function getTips() { return $this->tips; }
@@ -63,5 +63,3 @@ class hlMaterialModel {
     public function getPrintSize() { return $this->print_size; }
     public function getOrdered() { return $this->ordered; }
 }
-
-?>

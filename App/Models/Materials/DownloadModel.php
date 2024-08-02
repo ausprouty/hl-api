@@ -2,7 +2,7 @@
 
 namespace App\Models\Materials;
 
-class HlDownloadModel {
+class DownloadModel {
     private $id;
     private $champion_id;
     private $file_name;

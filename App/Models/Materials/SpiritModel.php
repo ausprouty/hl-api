@@ -2,7 +2,7 @@
 
 namespace App\Models\Materials;
 
-class HlSpiritModel {
+class SpiritModel {
     private $id;
     private $name;
     private $webpage;
