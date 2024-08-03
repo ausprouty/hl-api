@@ -2,7 +2,7 @@
 
 namespace App\Models\Emails;
 
-class hlEmailModel {
+class EmailModel {
     private $id;
     private $subject;
     private $body;

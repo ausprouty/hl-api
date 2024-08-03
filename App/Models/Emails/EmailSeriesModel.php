@@ -2,7 +2,7 @@
 
 namespace App\Models\Emails;
 
-class hlEmailSeriesModel {
+class EmailSeriesModel {
     private $tid;
     private $max;
     private $active;

@@ -2,7 +2,7 @@
 
 namespace App\Models\Emails;
 
-class hlEmailQueModel {
+class EmailQueModel {
     private $id;
     private $delay_until;
     private $email_from;

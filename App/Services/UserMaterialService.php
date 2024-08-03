@@ -23,56 +23,73 @@ class UserMaterialService {
 
     public function handleUserMaterialDownload() {
         // Check authorization and sanitize data
-        $input = $this->postInputController->handlePost();
-        if (!$input['success']) {
-            return $this->returnError($input['message']);
+        $data = $this->getInputData();
+        if (!$data) {
+            return $this->returnError('Invalid input data');
         }
-        $data = $input['data'];
-        writeLog('UserMaterialService-31', $data);
-        // See if this material exists in the database
-        $materialID = $this->materialController->getIdByFileName($data['file']);
+
+        // Find the material ID and manage download
+        $materialID = $this->processMaterial($data);
         if (!$materialID) {
             return $this->returnError('File not found');
         }
-        // increment count for this material
-        $this->materialController->getAndIncrementDownloads($materialID); 
-        // Create or update user contact details
+
+        // Update user details and last download date
+        $userId = $this->updateUserDetails($data);
+        if (!$userId) {
+            return $this->returnError('Failed to update user details');
+        }
+
+        // Handle mailing lists and download record
+        $this->handleMailingLists($data, $userId, $materialID);
+
+        // Return the file URL
+        return $this->returnSuccess($data['file']);
+    }
+
+    protected function getInputData() {
+        $input = $this->postInputController->handlePost();
+        if (!$input['success']) {
+            return null;
+        }
+        return $input['data'];
+    }
+
+    protected function processMaterial($data) {
+        $materialID = $this->materialController->getIdByFileName($data['file']);
+        if ($materialID) {
+            $this->materialController->getAndIncrementDownloads($materialID);
+        }
+        return $materialID;
+    }
+
+    protected function updateUserDetails($data) {
         $userId = $this->championController->updateChampionFromForm($data);
-        // update the user's last download date
-        $this->championController->updateLastDownloadDate($userId);
-       // Validate required parameters
-        if (empty($userId) || empty($materialID) || empty($data['file'])) {
-            throw new InvalidArgumentException('Champion ID, file name, and file ID are required.');
+        if ($userId) {
+            $this->championController->updateLastDownloadDate($userId);
         }
-        $mailingLists= $this->splitMailingLists($data['selected_mail_lists']);
-        writeLog('UserMaterialService-50', $mailingLists);
-        $tips = null;
-        if ($mailingLists['tips']){
-            $tips = time();
-        }
-        // Construct parameters
+        return $userId;
+    }
+
+    protected function handleMailingLists($data, $userId, $materialID) {
+        $mailingLists = $this->splitMailingLists($data['selected_mail_lists']);
+        $tips = $mailingLists['tips'] ? time() : null;
+
         $rawData = [
             'champion_id' => $userId,
             'file_name' => $data['file'],
             'file_id' => $materialID,
-            'requested_tips' => $tips ?? null,
+            'requested_tips' => $tips,
         ];
-        $download = $this->downloadController->createDownload($rawData);
-       
-       
-        // Return the file URL
-        $file_url = RESOURCE_DIR . $data['file'];
-
-        return json_encode(['success' => true, 'file_url' => $file_url]);
+        $this->downloadController->createDownloadRecord($rawData);
     }
-    public function splitMailingLists($selectedMailLists) {
+
+    protected function splitMailingLists($selectedMailLists) {
         // Split the string by the comma delimiter
         $mailingListsArray = explode(',', $selectedMailLists);
 
         // Convert the array to an associative array with the value set to true
-        $mailingListsAssoc = array_fill_keys($mailingListsArray, true);
-
-        return $mailingListsAssoc;
+        return array_fill_keys($mailingListsArray, true);
     }
 
     protected function returnError($message) {
@@ -80,5 +97,10 @@ class UserMaterialService {
             'success' => false,
             'message' => $message
         ]);
+    }
+
+    protected function returnSuccess($file) {
+        $file_url = RESOURCE_DIR . $file;
+        return json_encode(['success' => true, 'file_url' => $file_url]);
     }
 }

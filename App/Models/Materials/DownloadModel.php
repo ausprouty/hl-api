@@ -33,12 +33,34 @@ class DownloadModel {
         $this->tip_detail = $params['tip_detail'] ?? null;
     }
 
-    // Method to save the download to the database
-    public function save() {
-        // Your database saving logic here
+    public function update() {
+        $query = "UPDATE hl_downloads 
+                  SET champion_id = :champion_id,
+                      file_name = :file_name,
+                      download_date = :download_date,
+                      requested_tips = :requested_tips,
+                      sent_tips = :sent_tips,
+                      file_id = :file_id,
+                      elapsed_months = :elapsed_months,
+                      tip = :tip,
+                      tip_detail = :tip_detail
+                  WHERE id = :id";
+        
+        $params = array(
+            ':champion_id' => $this->champion_id,
+            ':file_name' => $this->file_name,
+            ':download_date' => $this->download_date,
+            ':requested_tips' => $this->requested_tips,
+            ':sent_tips' => $this->sent_tips,
+            ':file_id' => $this->file_id,
+            ':elapsed_months' => $this->elapsed_months,
+            ':tip' => $this->tip,
+            ':tip_detail' => $this->tip_detail,
+            ':id' => $this->id // Ensure $this->id is set for the update
+        );
+        // Execute the query
+        $this->databaseService->executeQuery($query, $params);
     }
-
-
     public function insert() {
         $query = "INSERT INTO hl_downloads 
                   (champion_id, file_name, download_date, requested_tips, sent_tips, file_id, elapsed_months, tip, tip_detail)

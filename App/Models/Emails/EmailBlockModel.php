@@ -2,7 +2,7 @@
 
 namespace App\Models\Emails;
 
-class hlEmailBlockModel {
+class EmailBlockModel {
     private $email;
 
     public function __construct($email = '') {
