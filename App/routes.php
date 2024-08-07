@@ -11,7 +11,7 @@ if ( $dir == '/home/hereslife/api.hereslife.com'){
 }
 else{
     require_once $dir .'/Configuration/.env.local.php';
-    $path = '/hl-api/App/';
+    $path = '/api_hereslife/public/App/';
     $location = 'local';
 }
 
