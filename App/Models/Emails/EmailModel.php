@@ -77,6 +77,7 @@ class EmailModel {
         $query = "SELECT id, subject, body, plain_text_only, headers, template, series, sequence, params
                   FROM hl_emails 
                   WHERE subject = :subject
+                  AND sequence = :sequence
                   LIMIT 1";
         $params = [':series' => $series, ':sequence' => $sequence];
         $results = $this->databaseService->executeQuery($query, $params);
