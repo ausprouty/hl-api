@@ -3,6 +3,7 @@
 $dir = __DIR__ ;
 require_once __DIR__ .'/router.php';
 require_once __DIR__.'/Includes/writeLog.php';
+writeLog('routes-6', $dir);
 
 if ( $dir == '/home/hereslife/api.hereslife.com'){
     require_once $dir .'/Configuration/.env.remote.php';
@@ -14,7 +15,7 @@ else{
     $path = '/api_hereslife/public/App/';
     $location = 'local';
 }
-
+writeLog('routes-17', $path);
 require_once  __DIR__.'/Configuration/my-autoload.inc.php';
 writeLog('routes.php', $path . 'spirit/titles');
 
