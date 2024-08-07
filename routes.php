@@ -3,7 +3,7 @@
 $dir = __DIR__ ;
 require_once __DIR__ .'/router.php';
 require_once __DIR__.'/App/Includes/writeLog.php';
-writeLog('routes-6', $dir);
+
 
 if ( $dir == '/home/hereslife/api.hereslife.com'){
     require_once $dir .'/App/Configuration/.env.remote.php';
@@ -12,12 +12,12 @@ if ( $dir == '/home/hereslife/api.hereslife.com'){
 }
 else{
     require_once $dir .'/App/Configuration/.env.local.php';
-    $path = '/aapi/';
+    $path = '/api_hereslife/public/';
     $location = 'local';
 }
-
-require_once  __DIR__.'/App/Configuration/my-autoload.inc.php';
 writeLog('routes.php', $path . 'spirit/titles');
+require_once  __DIR__.'/App/Configuration/my-autoload.inc.php';
+
 
 get( $path, '/App/Views/indexLocal.php');
 get($path . 'test', 'App/API/Materials/getTractsToView.php');
