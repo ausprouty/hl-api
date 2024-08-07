@@ -12,7 +12,7 @@ if ( $dir == '/home/hereslife/api.hereslife.com'){
 }
 else{
     require_once $dir .'/App/Configuration/.env.local.php';
-    $path = '/api_hereslife/public/';
+    $path = '/api_hereslife/backend/';
     $location = 'local';
 }
 writeLog('routes.php', $path . 'spirit/titles');
