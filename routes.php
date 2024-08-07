@@ -15,6 +15,10 @@ else{
     $path = '/api_hereslife/backend/';
     $location = 'local';
 }
+
+error_log("LOG_MODE: " . LOG_MODE);
+error_log("ROOT_LOG: " . ROOT_LOG);
+error_log("URL: " . $_SERVER['REQUEST_URI']);
 writeLog('routes.php', $path . 'spirit/titles');
 require_once  __DIR__.'/App/Configuration/my-autoload.inc.php';
 
