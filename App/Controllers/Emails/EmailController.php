@@ -13,6 +13,7 @@ class EmailController {
     }
 
     public function getEmailBySeriesAndSequence($series, $sequence) {
+        
         $emailRecord = $this->emailModel->findOneInSeries($series, $sequence);
 
         if ($emailRecord) {

@@ -3,18 +3,9 @@ use App\Controllers\Emails\EmailController;
 
 header('Content-Type: application/json');
 
-// Input validation
-$series = filter_input(INPUT_GET, 'series', FILTER_SANITIZE_STRING);
-$sequence = filter_input(INPUT_GET, 'sequence', FILTER_VALIDATE_INT);
+// anyone can access this database to receive the emails in question
 
-if ($series === false || $sequence === false) {
-    $response = [
-        'success' => false,
-        'message' => 'Invalid input',
-    ];
-    exit;
-}
-
+writeLogDebug("SeriesEmailText" , "series: $series, sequence: $sequence");
 $emailController = new EmailController();
 $data = $emailController->getEmailBySeriesAndSequence($series, $sequence);
 
