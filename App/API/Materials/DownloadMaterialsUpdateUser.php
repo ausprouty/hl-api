@@ -1,8 +1,6 @@
 <?php
 
 use App\Services\UserMaterialService;
-
-header('Content-Type: application/json');
-
 $userMaterialService = new UserMaterialService();
+header('Content-Type: application/json');
 echo $userMaterialService->handleUserMaterialDownload();

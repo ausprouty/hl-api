@@ -1,7 +1,7 @@
 <?php
 use App\Controllers\Emails\EmailController;
 
-header('Content-Type: application/json');
+
 
 // anyone can access this database to receive the emails in question
 
@@ -14,5 +14,5 @@ $response = [
     'success' => true,
     'data' => $data,
 ];
-
+header('Content-Type: application/json');
 echo json_encode($response);

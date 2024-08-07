@@ -3,8 +3,6 @@ use App\Controllers\Data\PostInputController;
 use App\Controllers\Materials\MaterialController;
 use App\Controllers\People\ChampionController;
 
-header('Content-Type: application/json');
-
 // check authorization and sanitize data
 $postInputController = new PostInputController();
 $input = $postInputController->handlePost();
@@ -27,12 +25,13 @@ $userId = $championController->updateChampionFromForm($data);
 writeLog('downloadMaterialsUpdateUser-26', $userId);
 // return the file url
 $file_url = RESOURCE_DIR . $data['file'];
-
+header('Content-Type: application/json');
 echo json_encode(array('success' => true, 'file_url' => $file_url));
 
 
 function returnError($message){   
-    writeLog('downloadMaterialsUpdateUser-25', $message);          
+    writeLog('downloadMaterialsUpdateUser-25', $message); 
+    header('Content-Type: application/json');         
     echo json_encode(array(
         'success' => false, 
         'message'=> $message));

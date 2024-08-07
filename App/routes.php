@@ -3,6 +3,7 @@
 $dir = __DIR__ ;
 require_once __DIR__ .'/router.php';
 require_once __DIR__.'/Includes/writeLog.php';
+require_once __DIR__.'/Configuration/cors.php';
 writeLog('routes6', $dir);
 
 if ( $dir == '/home/hereslife/api.hereslife.com'){
